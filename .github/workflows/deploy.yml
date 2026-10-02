@@ -1,0 +1,216 @@
+name: Generate File Explorer and Deploy
+
+on:
+  push:
+    branches:
+      - main # Если твоя ветка называется master, замени на master
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate Folder Tree
+        run: |
+          python -c "
+          import os
+          import json
+          import urllib.parse
+
+          TARGET_DIR = 'Дополнительные-материалы'
+
+          def build_tree(path):
+              # Получаем имя текущей папки/файла
+              name = os.path.basename(path) or TARGET_DIR
+              
+              # Проверяем, есть ли index.html в этой папке
+              has_index = False
+              if os.path.isdir(path):
+                  try:
+                      has_index = 'index.html' in os.listdir(path)
+                  except:
+                      pass
+
+              # Если это файл (и это не наш генерируемый index.html)
+              if os.path.isfile(path):
+                  return {
+                      'type': 'file',
+                      'name': name,
+                      'path': urllib.parse.quote(path)
+                  }
+              
+              # Если это директория
+              if os.path.isdir(path):
+                  children = []
+                  try:
+                      for item in sorted(os.listdir(path)):
+                          # Игнорируем скрытые файлы
+                          if item.startswith('.'):
+                              continue
+                          child_path = os.path.join(path, item)
+                          children.append(build_tree(child_path))
+                  except Exception as e:
+                      print(f'Ошибка чтения {path}: {e}')
+                  
+                  return {
+                      'type': 'dir',
+                      'name': name,
+                      'path': urllib.parse.quote(path),
+                      'has_index': has_index,
+                      'children': children
+                  }
+
+          # Запуск построения дерева
+          if os.path.exists(TARGET_DIR):
+              tree_data = build_tree(TARGET_DIR)
+          else:
+              tree_data = {'type': 'dir', 'name': TARGET_DIR, 'children': [], 'has_index': False, 'path': TARGET_DIR}
+
+          # Шаблон HTML с CSS и JS для интерактивного дерева
+          html_template = '''<!DOCTYPE html>
+          <html lang='ru'>
+          <head>
+              <meta charset='UTF-8'>
+              <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+              <title>Проводник материалов</title>
+              <style>
+                  body { font-family: system-ui, -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #f6f8fa; color: #24292f; }
+                  h1 { border-bottom: 1px solid #d0d7de; padding-bottom: 10px; font-size: 1.8em; }
+                  .tree-root { list-style: none; padding-left: 0; }
+                  ul { list-style: none; padding-left: 20px; }
+                  li { margin: 6px 0; position: relative; }
+                  .item { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; padding: 4px 6px; border-radius: 4px; }
+                  .item:hover { background-color: #f0f2f5; }
+                  .folder { font-weight: 600; color: #24292f; }
+                  .folder-link { font-weight: 600; color: #0969da; text-decoration: none; }
+                  .folder-link:hover { text-decoration: underline; }
+                  .file { color: #0969da; text-decoration: none; }
+                  .file:hover { text-decoration: underline; }
+                  .toggle-icon { display: inline-block; width: 12px; font-size: 0.8em; color: #57606a; transition: transform 0.2s; }
+                  .collapsed .toggle-icon { transform: rotate(-90deg); }
+                  .collapsed > ul { display: none; }
+                  .icon { font-size: 1.1em; }
+              </style>
+          </head>
+          <body>
+              <h1>📂 Обзор дополнительных материалов</h1>
+              <p>Ниже представлена актуальная структура проекта. Папки с собственным сайтом выделены синим цветом.</p>
+              <div id='tree-container'></div>
+
+              <script>
+                  const treeData = ''' + json.dumps(tree_data) + ''';
+
+                  function renderNode(node) {
+                      const li = document.createElement('li');
+                      const itemDiv = document.createElement('div');
+                      itemDiv.className = 'item';
+
+                      if (node.type === 'dir') {
+                          li.className = 'folder-node';
+                          
+                          const toggle = document.createElement('span');
+                          toggle.className = 'toggle-icon';
+                          toggle.innerText = node.children && node.children.length ? '▼' : '';
+                          itemDiv.appendChild(toggle);
+
+                          const icon = document.createElement('span');
+                          icon.className = 'icon';
+                          icon.innerText = '📁';
+                          itemDiv.appendChild(icon);
+
+                          // Если в папке есть index.html, делаем её ссылкой на этот index.html
+                          if (node.has_index && node.name !== 'Дополнительные-материалы') {
+                              const link = document.createElement('a');
+                              link.className = 'folder-link';
+                              link.href = './' + node.path + '/index.html';
+                              link.innerText = node.name;
+                              itemDiv.appendChild(link);
+                          } else {
+                              const span = document.createElement('span');
+                              span.className = 'folder';
+                              span.innerText = node.name;
+                              itemDiv.appendChild(span);
+                          }
+
+                          if (node.children && node.children.length) {
+                              const ul = document.createElement('ul');
+                              node.children.forEach(child => {
+                                  ul.appendChild(renderNode(child));
+                              });
+                              li.appendChild(itemDiv);
+                              li.appendChild(ul);
+
+                              // Делаем сворачивание/разворачивание по клику на иконку стрелочки или имя папки (если это не ссылка)
+                              itemDiv.addEventListener('click', (e) => {
+                                  if (e.target.tagName !== 'A') {
+                                      li.classList.toggle('collapsed');
+                                  }
+                              });
+                          } else {
+                              li.appendChild(itemDiv);
+                          }
+                      } else {
+                          // Чтобы не дублировать index.html в списке файлов внутри папки-ссылки
+                          if (node.name.toLowerCase() === 'index.html') return null;
+
+                          const icon = document.createElement('span');
+                          icon.className = 'icon';
+                          icon.innerText = '📄';
+                          itemDiv.appendChild(icon);
+
+                          const link = document.createElement('a');
+                          link.className = 'file';
+                          link.href = './' + node.path;
+                          link.innerText = node.name;
+                          itemDiv.appendChild(link);
+                          li.appendChild(itemDiv);
+                      }
+                      return li;
+                  }
+
+                  const container = document.getElementById('tree-container');
+                  const rootUl = document.createElement('ul');
+                  rootUl.className = 'tree-root';
+                  const renderedRoot = renderNode(treeData);
+                  if (renderedRoot) {
+                      rootUl.appendChild(renderedRoot);
+                      container.appendChild(rootUl);
+                  }
+              </script>
+          </body>
+          </html>'''
+
+          with open('index.html', 'w', encoding='utf-8') as f:
+              f.write(html_template)
+          "
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
