@@ -1,75 +1,32 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>/* Alignment */
-mtable.right-align mtd,
-mtable mtd.right-align,
-mtable.left-align mtd.right-align,
-mtable.aligned mtd:nth-child(odd) {
-  justify-items: end;
-  text-align: right;
-}
-mtable.cases mtd,
-mtable.left-align mtd,
-mtable mtd.left-align,
-mtable.aligned mtd:nth-child(even),
-math:is(:not([display])) > mtable.multiline-equation mtd {
-  justify-items: start;
-  text-align: left;
-}
-mtable.cases mtd,
-mtable.aligned mtd,
-mtable mtd.flushed,
-mtable mtd.left-flush {
-  padding-left: 0;
-}
-mtable.cases mtd,
-mtable.aligned mtd,
-mtable mtd.flushed,
-mtable mtd.right-flush {
-  padding-right: 0;
-}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>обозначения.typ - Просмотр</title>
+    
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; padding: 30px; background: #fafafa; color: #333; line-height: 1.5; margin: 0; }
+        .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 20px; border: 1px solid #e1e4e8; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); box-sizing: border-box; }
+        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eaecef; padding-bottom: 15px; }
+        .breadcrumbs { font-size: 1.3em; font-weight: 600; }
+        .breadcrumbs a { color: #0366d6; text-decoration: none; }
+        .breadcrumbs a:hover { text-decoration: underline; }
+        .breadcrumbs span { color: #586069; }
+        .wrapped-content-container { padding-top: 15px; width: 100%; overflow-x: auto; }
+    </style>
 
-/* Tables */
-mtable {
-  math-style: inherit;
-}
-mtd {
-  math-depth: auto-add;
-  math-style: compact;
-  math-shift: compact;
-}
-
-/* Equations */
-mtable.multiline-equation mtd {
-  math-depth: inherit;
-  math-style: inherit;
-  math-shift: inherit;
-  padding: 0;
-}
-math > mtable.multiline-equation mtr:not(:last-child) mtd {
-  padding-bottom: 0.5em;
-}
-
-/* Fractions */
-mfrac {
-  padding-inline: 0;
-  margin-inline: 0.1em;
-}
-
-/* Accents */
-mover[accent="true" i] > :first-child {
-  font-feature-settings: "dtls";
-}
-mover.dotted[accent="true" i] > :first-child {
-  font-feature-settings: "dtls" 0;
-}
-
-/* Other rules for scriptlevel, displaystyle and math-shift */
-munder > :nth-child(2),
-munderover > :nth-child(2) {
-  math-shift: compact
-}
-munder[accentunder="true" i] > :not(:first-child),
-mover[accent="true" i] > :not(:first-child) {
-  math-depth: inherit;
-  math-style: inherit;
-  math-shift: inherit;
-}</style></head><body><h3>Обозначения</h3><ul><li><math><msub><mi>𝑉</mi><mtext>конт</mtext></msub></math> - целевая контурная скорость</li></ul><p>Мгновенные характеристики для <math><mi>𝑖</mi></math>-й оси в момент времени <math><mi>𝑡</mi></math>:</p><ul><li><math><msub><mi>𝑥</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — координата</li><li><math><msub><mi>𝑣</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — осевая скорость</li><li><math><msub><mi>𝑎</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — ускорение</li><li><math><msub><mi>𝑗</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — рывок</li><li><math><mi>𝑢</mi><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — координата (виртуальная)</li><li><math><mover accent="true"><mi>𝑢</mi><mo>̇</mo></mover><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> - скорость (виртуальная)</li><li><math><mover accent="true"><mi>𝑢</mi><mo>̈</mo></mover><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> - ускорение (виртуальное)</li><li><math><mover accent="true"><mi>𝑢</mi><mo>⃛</mo></mover><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> - рывок (виртуальный)</li></ul><p>Максимальные допустимые характеристики <math><mi>𝑖</mi></math>-й оси (константы):</p><ul><li><math><msub><mi>𝑉</mi><mrow><mo lspace="0em" rspace="0em">max</mo><mo rspace="0em">,</mo><mi>𝑖</mi></mrow></msub></math> - осевая скорость</li><li><math><msub><mi>𝐴</mi><mrow><mo lspace="0em" rspace="0em">max</mo><mo rspace="0em">,</mo><mi>𝑖</mi></mrow></msub></math> - ускорение</li><li><math><msub><mi>𝐽</mi><mrow><mo lspace="0em" rspace="0em">max</mo><mo rspace="0em">,</mo><mi>𝑖</mi></mrow></msub></math> - рывок</li><li><math><msub><mover accent="true"><mi>𝑈</mi><mo>̇</mo></mover><mo>max</mo></msub></math> - скорость (виртуальная)</li><li><math><msub><mover accent="true"><mi>𝑈</mi><mo>̈</mo></mover><mo>max</mo></msub></math> - ускорение (виртуальное)</li><li><math><msub><mover accent="true"><mi>𝑈</mi><mo>⃛</mo></mover><mo>max</mo></msub></math> - рывок (виртуальный)</li></ul><p>Дополнительные обозначения (TODO)</p><ul><li><math><msub><mi>𝑇</mi><mtext>acc</mtext></msub></math></li><li><math><msub><mi>𝑡</mi><mtext>acc</mtext></msub><mo>,</mo><msub><mi>𝑡</mi><mtext>const</mtext></msub><mo>,</mo><msub><mi>𝑡</mi><mtext>dcc</mtext></msub></math></li><li><math><msub><mi>𝐿</mi><mtext>acc</mtext></msub></math></li></ul></body></html>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <img src="../../logo.jpg" alt="Logo" width="48" height="48" onerror="this.style.display='none'">
+        <div class="breadcrumbs">
+            <a href="../../index.html">Index of</a> / <a href="../index.html">Статья</a> / <a href="index.html">0. Преамбула</a> / <span>обозначения.typ</span>
+        </div>
+    </div>
+    <div class="wrapped-content-container">
+        <h3>Обозначения</h3><ul><li><math><msub><mi>𝑉</mi><mtext>конт</mtext></msub></math> - целевая контурная скорость</li></ul><p>Мгновенные характеристики для <math><mi>𝑖</mi></math>-й оси в момент времени <math><mi>𝑡</mi></math>:</p><ul><li><math><msub><mi>𝑥</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — координата</li><li><math><msub><mi>𝑣</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — осевая скорость</li><li><math><msub><mi>𝑎</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — ускорение</li><li><math><msub><mi>𝑗</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — рывок</li><li><math><mi>𝑢</mi><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> — координата (виртуальная)</li><li><math><mover accent="true"><mi>𝑢</mi><mo>̇</mo></mover><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> - скорость (виртуальная)</li><li><math><mover accent="true"><mi>𝑢</mi><mo>̈</mo></mover><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> - ускорение (виртуальное)</li><li><math><mover accent="true"><mi>𝑢</mi><mo>⃛</mo></mover><mrow><mo>(</mo><mi>𝑡</mi><mo>)</mo></mrow></math> - рывок (виртуальный)</li></ul><p>Максимальные допустимые характеристики <math><mi>𝑖</mi></math>-й оси (константы):</p><ul><li><math><msub><mi>𝑉</mi><mrow><mo lspace="0em" rspace="0em">max</mo><mo rspace="0em">,</mo><mi>𝑖</mi></mrow></msub></math> - осевая скорость</li><li><math><msub><mi>𝐴</mi><mrow><mo lspace="0em" rspace="0em">max</mo><mo rspace="0em">,</mo><mi>𝑖</mi></mrow></msub></math> - ускорение</li><li><math><msub><mi>𝐽</mi><mrow><mo lspace="0em" rspace="0em">max</mo><mo rspace="0em">,</mo><mi>𝑖</mi></mrow></msub></math> - рывок</li><li><math><msub><mover accent="true"><mi>𝑈</mi><mo>̇</mo></mover><mo>max</mo></msub></math> - скорость (виртуальная)</li><li><math><msub><mover accent="true"><mi>𝑈</mi><mo>̈</mo></mover><mo>max</mo></msub></math> - ускорение (виртуальное)</li><li><math><msub><mover accent="true"><mi>𝑈</mi><mo>⃛</mo></mover><mo>max</mo></msub></math> - рывок (виртуальный)</li></ul><p>Дополнительные обозначения (TODO)</p><ul><li><math><msub><mi>𝑇</mi><mtext>acc</mtext></msub></math></li><li><math><msub><mi>𝑡</mi><mtext>acc</mtext></msub><mo>,</mo><msub><mi>𝑡</mi><mtext>const</mtext></msub><mo>,</mo><msub><mi>𝑡</mi><mtext>dcc</mtext></msub></math></li><li><math><msub><mi>𝐿</mi><mtext>acc</mtext></msub></math></li></ul>
+    </div>
+</div>
+</body>
+</html>
