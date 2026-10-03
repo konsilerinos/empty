@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
+
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
+
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
+
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
+
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
+
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><h3>[TODO] Описание траектории</h3><math display="block"><mi>𝒓</mi><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><msub><mi>𝑥</mi><mn>1</mn></msub><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd><msub><mi>𝑥</mi><mn>2</mn></msub><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd><mi>…</mi></mtd></mtr><mtr><mtd><msub><mi>𝑥</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd><mi>…</mi></mtd></mtr><mtr><mtd><msub><mi>𝑥</mi><mi>𝑁</mi></msub><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow></mtd></mtr></mtable><mo>)</mo></mrow><mo>=</mo><mrow><mo>(</mo><mtable><mtr><mtd><msub><mi>𝑓</mi><mn>1</mn></msub><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd><msub><mi>𝑓</mi><mn>2</mn></msub><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd><mi>…</mi></mtd></mtr><mtr><mtd><msub><mi>𝑓</mi><mi>𝑖</mi></msub><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow></mtd></mtr><mtr><mtd><mi>…</mi></mtd></mtr><mtr><mtd><msub><mi>𝑓</mi><mi>𝑁</mi></msub><mrow><mo>(</mo><mi>𝑢</mi><mo>)</mo></mrow></mtd></mtr></mtable><mo>)</mo></mrow><mo rspace="0em">,</mo><mspace width="1em"/><mi>𝑢</mi><mo>∈</mo><mrow><mo>[</mo><mrow><mn>0</mn><mo>,</mo><mn>1</mn></mrow><mo>]</mo></mrow></math><math display="block"><mi>𝒓</mi><mrow><mo>(</mo><mn>0</mn><mo>)</mo></mrow><mo>=</mo><msub><mi>𝑟</mi><mn>0</mn></msub><mo>,</mo><mi>𝒓</mi><mrow><mo>(</mo><mn>1</mn><mo>)</mo></mrow><mo>=</mo><msub><mi>𝑟</mi><mn>1</mn></msub></math></body></html>

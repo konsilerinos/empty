@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>/* Alignment */
+mtable.right-align mtd,
+mtable mtd.right-align,
+mtable.left-align mtd.right-align,
+mtable.aligned mtd:nth-child(odd) {
+  justify-items: end;
+  text-align: right;
+}
+mtable.cases mtd,
+mtable.left-align mtd,
+mtable mtd.left-align,
+mtable.aligned mtd:nth-child(even),
+math:is(:not([display])) > mtable.multiline-equation mtd {
+  justify-items: start;
+  text-align: left;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.left-flush {
+  padding-left: 0;
+}
+mtable.cases mtd,
+mtable.aligned mtd,
+mtable mtd.flushed,
+mtable mtd.right-flush {
+  padding-right: 0;
+}
+
+/* Tables */
+mtable {
+  math-style: inherit;
+}
+mtd {
+  math-depth: auto-add;
+  math-style: compact;
+  math-shift: compact;
+}
+
+/* Equations */
+mtable.multiline-equation mtd {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+  padding: 0;
+}
+math > mtable.multiline-equation mtr:not(:last-child) mtd {
+  padding-bottom: 0.5em;
+}
+
+/* Fractions */
+mfrac {
+  padding-inline: 0;
+  margin-inline: 0.1em;
+}
+
+/* Accents */
+mover[accent="true" i] > :first-child {
+  font-feature-settings: "dtls";
+}
+mover.dotted[accent="true" i] > :first-child {
+  font-feature-settings: "dtls" 0;
+}
+
+/* Other rules for scriptlevel, displaystyle and math-shift */
+munder > :nth-child(2),
+munderover > :nth-child(2) {
+  math-shift: compact
+}
+munder[accentunder="true" i] > :not(:first-child),
+mover[accent="true" i] > :not(:first-child) {
+  math-depth: inherit;
+  math-style: inherit;
+  math-shift: inherit;
+}</style></head><body><math display="block"><mi>𝜙</mi><mrow><mo>(</mo><mrow><mi>𝑥</mi><mo>,</mo><mi>𝜔</mi></mrow><mo>)</mo></mrow><mo>=</mo><mrow><mo>[</mo><mtable><mtr><mtd><mfrac><mrow><mo lspace="0em" rspace="0em">d</mo><mi>𝑦</mi></mrow><mrow><mo lspace="0em" rspace="0em">d</mo><mi>𝑥</mi></mrow></mfrac><mo>+</mo><msqrt><mn>1</mn><mo>+</mo><msup><mi>𝜉</mi><mn>2</mn></msup></msqrt></mtd><mtd><mfrac><mn>1</mn><mi>𝑛</mi></mfrac><msubsup><mo form="prefix">∑</mo><mrow><mi>𝑖</mi><mo lspace="0em" rspace="0em">=</mo><mn>1</mn></mrow><mi>𝑛</mi></msubsup><msub><mo form="prefix" lspace="0em" rspace="0em">log</mo><mn>2</mn></msub><mrow><mo>(</mo><msub><mi>𝑝</mi><mi>𝑖</mi></msub><mo>)</mo></mrow></mtd></mtr><mtr><mtd><msubsup><mo lspace="0em">∫</mo><mrow><mo>−</mo><mi>∞</mi></mrow><mi>∞</mi></msubsup><msup><mi>𝑒</mi><mrow><mo>−</mo><msup><mi>𝑡</mi><mn>2</mn></msup></mrow></msup><mspace width="0.1667em"/><mo form="prefix" lspace="0em" rspace="0em">d</mo><mi>𝑡</mi></mtd><mtd><msub><mo lspace="0em" rspace="0.16666666666666666em">lim</mo><mrow><mi>ℎ</mi><mo lspace="0em" rspace="0em" stretchy="false">→</mo><mn>0</mn></mrow></msub><mfrac><mrow><mi>𝑓</mi><mrow><mo>(</mo><mrow><mi>𝑥</mi><mo lspace="0em" rspace="0em">+</mo><mi>ℎ</mi></mrow><mo>)</mo></mrow><mo lspace="0em" rspace="0em">−</mo><mi>𝑓</mi><mrow><mo>(</mo><mi>𝑥</mi><mo>)</mo></mrow></mrow><mi>ℎ</mi></mfrac></mtd></mtr></mtable><mo>]</mo></mrow><mo lspace="0.2222222222222222em" rspace="0.2222222222222222em">×</mo><mrow><mo>{</mo><mtable class="cases"><mtr><mtd><mover accent="true"><mi>𝑥</mi><mo>̇</mo></mover><mo>+</mo><mrow><mo>(</mo><mtable><mtr><mtd><mi>𝑎</mi></mtd></mtr><mtr><mtd><mi>𝑏</mi></mtd></mtr></mtable><mo>)</mo></mrow><mo>=</mo><mn>0</mn><mspace width="0.2222em"/></mtd><mtd><mtext>если</mtext><mspace width="0.2222em"/><mi>𝑥</mi><mo>&lt;</mo><mn>0</mn></mtd></mtr><mtr><mtd><msub><mi>𝔸</mi><mrow><mi>𝕞</mi><mo lspace="0em" rspace="0em">×</mo><mi>𝕟</mi></mrow></msub><mspace width="0.1667em"/><mi>𝕩</mi><mo>≥</mo><msub><mi>𝑏</mi><mi>𝑖</mi></msub><mspace width="0.2222em"/></mtd><mtd><mtext>если</mtext><mspace width="0.2222em"/><mi>𝑥</mi><mo>≥</mo><mn>0</mn></mtd></mtr></mtable></mrow></math></body></html>

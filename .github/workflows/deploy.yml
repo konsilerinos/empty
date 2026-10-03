@@ -1,0 +1,74 @@
+name: Generate File Explorer and Deploy
+
+on:
+  push:
+    branches:
+      - main # Замени на master, если нужно
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate tree.json
+        run: |
+          python -c "
+          import os
+          import json
+          import urllib.parse
+
+          TARGET_DIR = 'Дополнительные-материалы'
+
+          def build_tree(path):
+              name = os.path.basename(path) or TARGET_DIR
+              has_index = False
+              if os.path.isdir(path):
+                  try:
+                      has_index = 'index.html' in os.listdir(path)
+                  except:
+                      pass
+
+              if os.path.isfile(path):
+                  return {'type': 'file', 'name': name, 'path': urllib.parse.quote(path)}
+              
+              if os.path.isdir(path):
+                  children = []
+                  try:
+                      for item in sorted(os.listdir(path)):
+                          if item.startswith('.'): continue
+                          children.append(build_tree(os.path.join(path, item)))
+                  except:
+                      pass
+                  return {'type': 'dir', 'name': name, 'path': urllib.parse.quote(path), 'has_index': has_index, 'children': children}
+
+          tree_data = build_tree(TARGET_DIR) if os.path.exists(TARGET_DIR) else {'type': 'dir', 'name': TARGET_DIR, 'children': [], 'has_index': False, 'path': TARGET_DIR}
+          
+          with open('tree.json', 'w', encoding='utf-8') as f:
+              json.dump(tree_data, f, ensure_ascii=False)
+          "
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
