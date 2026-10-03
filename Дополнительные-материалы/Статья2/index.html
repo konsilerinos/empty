@@ -2,26 +2,40 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index of /Статья2</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; padding: 30px; background: #fafafa; color: #333; line-height: 1.5; margin: 0; }
-        .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 20px; border: 1px solid #e1e4e8; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); box-sizing: border-box; }
-        .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eaecef; padding-bottom: 15px; }
-        .breadcrumbs { font-size: 1.3em; font-weight: 600; }
-        .breadcrumbs a { color: #0366d6; text-decoration: none; }
-        .breadcrumbs a:hover { text-decoration: underline; }
-        .breadcrumbs span { color: #586069; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        tr { border-bottom: 1px solid #eaecef; }
-        tr:hover { background-color: #f6f8fa; cursor: pointer; }
-        th, td { padding: 10px 12px; text-align: left; font-size: 14px; }
-        th { font-weight: 600; color: #586069; background: #f6f8fa; }
-        a { color: #0366d6; text-decoration: none; font-weight: 500; }
-        a:hover { text-decoration: underline; }
-        .meta-col { text-align: right; color: #6a737d; width: 180px; font-family: monospace; }
-        .size-col { text-align: right; color: #6a737d; width: 100px; font-family: monospace; }
-        .preview-iframe { width: 100%; border: none; min-height: 70vh; display: block; }
-    </style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; padding: 30px; background: #fafafa; color: #333; line-height: 1.5; margin: 0; }
+    .container { max-width: 1000px; margin: 0 auto; background: #fff; padding: 20px; border: 1px solid #e1e4e8; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); box-sizing: border-box; }
+    .header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #eaecef; padding-bottom: 15px; }
+    .breadcrumbs { font-size: 1.3em; font-weight: 600; word-break: break-word; }
+    .breadcrumbs a { color: #0366d6; text-decoration: none; }
+    .breadcrumbs a:hover { text-decoration: underline; }
+    .breadcrumbs span { color: #586069; }
+    
+    .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; }
+    
+    tr { border-bottom: 1px solid #eaecef; }
+    tr:hover { background-color: #f6f8fa; cursor: pointer; }
+    th, td { padding: 10px 12px; text-align: left; font-size: 14px; }
+    th { font-weight: 600; color: #586069; background: #f6f8fa; }
+    a { color: #0366d6; text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
+    .meta-col { text-align: right; color: #6a737d; width: 180px; font-family: monospace; white-space: nowrap; }
+    .size-col { text-align: right; color: #6a737d; width: 100px; font-family: monospace; white-space: nowrap; }
+    .preview-iframe { width: 100%; border: none; min-height: 70vh; display: block; }
+    .footer-links { margin-top: 15px; padding-top: 5px; display: flex; gap: 20px; flex-wrap: wrap; }
+
+    @media (max-width: 768px) {
+        body { padding: 12px; font-size: 15px; }
+        .container { padding: 14px; border-radius: 4px; }
+        .header { gap: 10px; margin-bottom: 15px; padding-bottom: 10px; }
+        .header img { width: 36px; height: 36px; }
+        .breadcrumbs { font-size: 1.1em; }
+        th, td { padding: 12px 8px; font-size: 15px; }
+    }
+</style>
 </head>
 <body>
 <div class="container">
@@ -31,15 +45,16 @@
             <a href="../index.html">Index of</a> / <span>Статья2</span> / 
         </div>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th>Имя файла / папки</th>
-                <th style="text-align: right;">Дата изменения</th>
-                <th style="text-align: right;">Размер</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Имя файла / папки</th>
+                    <th style="text-align: right;">Дата изменения</th>
+                    <th style="text-align: right;">Размер</th>
+                </tr>
+            </thead>
+            <tbody>
         <tr onclick="window.location='../index.html';">
             <td><a href="../index.html" onclick="event.stopPropagation();">&#128194; ../</a></td>
             <td class="meta-col">-</td>
@@ -47,38 +62,39 @@
         </tr>
         <tr onclick="window.location='0. Преамбула/index.html';">
             <td><a href="0. Преамбула/index.html" onclick="event.stopPropagation();">&#128194; 0. Преамбула</a></td>
-            <td class="meta-col">03-Oct-2026 22:26</td>
+            <td class="meta-col">03-Oct-2026 22:27</td>
             <td class="size-col">-</td>
         </tr>
         <tr onclick="window.location='1. Виртуальное движение/index.html';">
             <td><a href="1. Виртуальное движение/index.html" onclick="event.stopPropagation();">&#128194; 1. Виртуальное движение</a></td>
-            <td class="meta-col">03-Oct-2026 22:26</td>
+            <td class="meta-col">03-Oct-2026 22:27</td>
             <td class="size-col">-</td>
         </tr>
         <tr onclick="window.location='2. Линейное движение/index.html';">
             <td><a href="2. Линейное движение/index.html" onclick="event.stopPropagation();">&#128194; 2. Линейное движение</a></td>
-            <td class="meta-col">03-Oct-2026 22:26</td>
+            <td class="meta-col">03-Oct-2026 22:27</td>
             <td class="size-col">-</td>
         </tr>
         <tr onclick="window.location='Вывод формул.html.index.html';">
             <td><a href="Вывод формул.html.index.html" onclick="event.stopPropagation();">📄 Вывод формул.html</a></td>
-            <td class="meta-col">03-Oct-2026 22:27</td>
+            <td class="meta-col">03-Oct-2026 22:40</td>
             <td class="size-col">13 K</td>
         </tr>
         <tr onclick="window.location='Список задач.html.index.html';">
             <td><a href="Список задач.html.index.html" onclick="event.stopPropagation();">📄 Список задач.html</a></td>
-            <td class="meta-col">03-Oct-2026 22:27</td>
+            <td class="meta-col">03-Oct-2026 22:40</td>
             <td class="size-col">154 B</td>
         </tr>
         <tr onclick="window.location='Статья.html.index.html';">
             <td><a href="Статья.html.index.html" onclick="event.stopPropagation();">📄 Статья.html</a></td>
-            <td class="meta-col">03-Oct-2026 22:27</td>
+            <td class="meta-col">03-Oct-2026 22:40</td>
             <td class="size-col">2.3 M</td>
         </tr>
         </tbody>
-    </table>
+        </table>
+    </div>
     
-    <div style="margin-top: 10px; padding-top: 5px; display: flex; gap: 20px;">
+    <div class="footer-links">
         <a href="https://github.com" target="_blank" style="display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: #586069; text-decoration: none; font-weight: 500; transition: color 0.2s;" onmouseover="this.style.color='#0366d6'; this.style.textDecoration='underline'" onmouseout="this.style.color='#586069'; this.style.textDecoration='none'">
             <svg xmlns="http://w3.org" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
