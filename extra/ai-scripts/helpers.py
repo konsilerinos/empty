@@ -94,9 +94,10 @@ def compile_typst_to_pdf(file_path, root_dir, current_logo_url):
     <style>
         .pdf-viewer {{
             width: 100%;
-            height: calc(100vh - 107px); 
+            height: calc(100vh - 101px); 
             border: 1px solid #e1e4e8;
             box-sizing: border-box;
+            display: block;
         }}
     </style>
 </head>
@@ -114,20 +115,20 @@ def compile_typst_to_pdf(file_path, root_dir, current_logo_url):
 </div>
 
 <script>
-    window.addEventListener('DOMContentLoaded', () => {{
+    function updatePdfSource() {{
         const iframe = document.getElementById('pdfPlayer');
-        let pdfUrl = "{rel_pdf_url}#toolbar=0&navpanes=0";
+        const hash = window.location.hash;
         
-        // Проверяем, передал ли друг хэш в ссылке (например, #task-1)
-        if (window.location.hash) {{
-            const targetLabel = window.location.hash.replace('#', '');
-            // Дописываем официальный параметр Adobe PDF для перехода к метке
-            pdfUrl += "&nameddest=" + encodeURIComponent(targetLabel);
+        if (hash) {{
+            const targetLabel = hash.replace('#', '');
+            iframe.src = "{rel_pdf_url}#nameddest=" + encodeURIComponent(targetLabel) + "&toolbar=0&navpanes=0";
+        }} else {{
+            iframe.src = "{rel_pdf_url}#toolbar=0&navpanes=0";
         }}
-        
-        // Только теперь инициализируем плеер
-        iframe.src = pdfUrl;
-    }});
+    }}
+
+    window.addEventListener('DOMContentLoaded', updatePdfSource);
+    window.addEventListener('hashchange', updatePdfSource);
 </script>
 </body>
 </html>"""
