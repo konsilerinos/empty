@@ -89,14 +89,14 @@ def compile_typst_to_pdf(file_path, root_dir, current_logo_url):
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{os.path.basename(file_path)} - Просмотр PDF</title>
+    <title>{os.path.basename(file_path)}</title>
     <link rel="stylesheet" href="{back_to_root}styles.css">
     <style>
         .pdf-viewer {{
             width: 100%;
-            height: 80vh;
+            height: calc(100vh - 107px); 
             border: 1px solid #e1e4e8;
-            border-radius: 6px;
+            box-sizing: border-box;
         }}
     </style>
 </head>
@@ -109,7 +109,6 @@ def compile_typst_to_pdf(file_path, root_dir, current_logo_url):
         </div>
     </div>
     <div class="wrapped-content-container">
-        <!-- Важно: изначально src оставляем пустым, чтобы передать параметры целиком -->
         <iframe id="pdfPlayer" class="pdf-viewer"></iframe>
     </div>
 </div>
