@@ -25,7 +25,7 @@ def build_index_for_dir(root_dir, current_dir):
             full_typ_path = os.path.join(current_dir, item)
             print(f"Компиляция Typst в PDF: {os.path.relpath(full_typ_path, root_dir)}...")
             # Если в helpers.py функция принимает current_logo_url, добавьте её третьим аргументом
-            compile_typst_to_pdf(full_typ_path, root_dir) 
+            compile_typst_to_pdf(full_typ_path, root_dir, current_logo_url) 
 
     try:
         items = os.listdir(current_dir)

@@ -1,12 +1,8 @@
-#set page(paper: "a4", margin: (x: 1cm, y: 1cm))
-
-#show heading: it => {
-  if it.has("label") {
-    [#link(it.label)[]] + it
-  } else {
-    it
-  }
-}
+#set page(
+  paper: "a4",
+  margin: (x: 1cm, y: 1cm),
+  // height: auto
+)
 
 // Ссылка на ресурс:
 // <a href="https://konsilerinos.github.io/books-knowledge/extra/cpp/tasks-0-100.html#task-2">see extra</a>

@@ -4,89 +4,6 @@ import shutil
 import re
 import hashlib
 
-def extract_and_render_blocks(file_path, project_root):
-    """
-    Ищет в файле блоки для рендеринга, создает для них PNG-картинки,
-    комментирует исходный код блока на лету и добавляет адаптивное изображение.
-    """
-    with open(file_path, "r", encoding="utf-8") as f:
-        content = f.read()
-
-    # Находим блоки между нашими тегами-комментариями
-    pattern = r"(//\s*\[RENDER_BLOCK_START\])(.*?)(//\s*\[RENDER_BLOCK_END\])"
-    matches = list(re.finditer(pattern, content, re.DOTALL))
-    
-    if not matches:
-        return content
-
-    assets_dir = os.path.join(os.path.dirname(file_path), "assets", "generated")
-    os.makedirs(assets_dir, exist_ok=True)
-
-    # Идем с конца файла, чтобы не сбивать индексы символов
-    for match in reversed(matches):
-        full_match_text = match.group(0)  # Весь блок целиком
-        start_marker = match.group(1)     # // [RENDER_BLOCK_START]
-        block_code = match.group(2)       # Сам код формулы/графика
-        end_marker = match.group(3)       # // [RENDER_BLOCK_END]
-        
-        # Хешируем чистый код блока
-        block_hash = hashlib.md5(block_code.encode("utf-8")).hexdigest()
-        img_name = f"block_{block_hash}.png"
-        img_path = os.path.join(assets_dir, img_name)
-
-        # Компилируем блок в PNG (300 DPI для высокой четкости шрифтов)
-        if not os.path.exists(img_path):
-            typst_standalone_code = f"""
-            #set page(width: auto, height: auto, margin: 5pt, fill: none)
-            {block_code.strip()}
-            """
-            
-            temp_typ_path = os.path.join(assets_dir, f"temp_{block_hash}.typ")
-            with open(temp_typ_path, "w", encoding="utf-8") as temp_f:
-                temp_f.write(typst_standalone_code)
-
-            cmd = [
-                "typst", "compile",
-                "--root", project_root,
-                "--ppi", "300",
-                temp_typ_path,
-                img_path
-            ]
-            try:
-                subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            except Exception as e:
-                print(f"Ошибка рендеринга блока {block_hash}: {e}")
-            finally:
-                if os.path.exists(temp_typ_path):
-                    os.remove(temp_typ_path)
-
-        # 1. Комментируем внутренности блока построчно
-        commented_lines = []
-        for line in full_match_text.splitlines():
-            # Если строчка уже закомментирована (например, сами маркеры), оставляем как есть
-            if line.strip().startswith("//"):
-                commented_lines.append(line)
-            else:
-                # Добавляем "// " в начало содержательных строк
-                commented_lines.append(f"// {line}")
-        commented_block = "\n".join(commented_lines)
-
-        # 2. Формируем путь для тега относительно корня проекта
-        rel_to_root = os.path.relpath(img_path, project_root).replace(os.sep, '/')
-        
-        # 3. Создаем тег со стилем max-width (в Typst это делается через встроенный стиль или обертку box)
-        # Использование max-width заставит картинку быть компактной и не растягиваться шире своего исходного размера
-        typst_image_tag = f'\n#align(center)[#image("/{rel_to_root}")]\n'
-        
-        # Соединяем закомментированный блок и картинку под ним
-        replacement_text = f"{commented_block}\n{typst_image_tag}"
-        
-        # Точечно заменяем исходный текст в файле
-        start, end = match.span()
-        content = content[:start] + replacement_text + content[end:]
-
-    return content
-
 def get_readable_size(size_in_bytes):
     if size_in_bytes >= 1024 * 1024:
         return f"{size_in_bytes / (1024 * 1024):.1f} M"
@@ -134,12 +51,11 @@ def minify_html(html_string):
     html_string = re.sub(r'\s+', ' ', html_string)
     return html_string.strip()
 
-def compile_typst_to_pdf(file_path, root_dir):
-    """Компилирует .typ файл в идеальный неразрывный .pdf"""
+def compile_typst_to_pdf(file_path, root_dir, current_logo_url):
+    """Компилирует .typ файл в идеальный неразрывный .pdf и оборачивает в HTML с логотипом"""
     output_pdf_path = os.path.splitext(file_path)[0] + ".pdf"
     file_dir = os.path.dirname(os.path.abspath(file_path))
     
-    # Ищем корень проекта
     current_check = file_dir
     project_root = file_dir
     while True:
@@ -149,7 +65,6 @@ def compile_typst_to_pdf(file_path, root_dir):
             break
         current_check = parent
 
-    # Базовая команда компиляции в PDF
     cmd = [
         "typst", "compile",
         "--root", project_root,
@@ -165,11 +80,9 @@ def compile_typst_to_pdf(file_path, root_dir):
         success = False
         
     if success and os.path.exists(output_pdf_path):
-        # Теперь генерируем HTML-обертку, которая покажет этот PDF во весь экран
         file_crumbs = generate_breadcrumbs(file_dir, root_dir, is_file=True, file_name=os.path.basename(file_path))
         back_to_root = get_relative_depth(file_dir, root_dir)
         
-        # Получаем относительный путь к PDF для iframe
         rel_pdf_url = os.path.basename(output_pdf_path)
 
         ennobled_html = f"""<!DOCTYPE html>
@@ -181,123 +94,11 @@ def compile_typst_to_pdf(file_path, root_dir):
     <style>
         .pdf-viewer {{
             width: 100%;
-            height: 80vh; /* Высота плеера на 80% экрана */
+            height: 80vh;
             border: 1px solid #e1e4e8;
             border-radius: 6px;
         }}
     </style>
-</head>
-<body>
-<div class="container">
-    <div class="header">
-        <div class="breadcrumbs">
-            {file_crumbs}
-        </div>
-    </div>
-    <div class="wrapped-content-container">
-        <!-- Встраиваем неразрывный PDF прямо в страницу -->
-        <iframe src="{rel_pdf_url}#toolbar=0&navpanes=0" class="pdf-viewer"></iframe>
-    </div>
-</div>
-</body>
-</html>"""
-
-        output_html_path = os.path.splitext(file_path)[0] + ".html"
-        with open(output_html_path, "w", encoding="utf-8") as f:
-            f.write(ennobled_html)
-
-    return success
-
-def compile_typst_to_html(file_path, root_dir, current_logo_url):
-    output_html_path = os.path.splitext(file_path)[0] + ".html"
-    file_dir = os.path.dirname(os.path.abspath(file_path))
-    
-    current_check = file_dir
-    project_root = file_dir
-    while True:
-        parent = os.path.dirname(current_check)
-        if os.path.basename(current_check) == "extra" or parent == current_check:
-            project_root = current_check
-            break
-        current_check = parent
-
-    real_assets_dir = None
-    if os.path.isdir(os.path.join(file_dir, "assets")):
-        real_assets_dir = os.path.join(file_dir, "assets")
-    elif os.path.isdir(os.path.join(os.path.dirname(file_dir), "assets")):
-        real_assets_dir = os.path.join(os.path.dirname(file_dir), "assets")
-    elif os.path.isdir(os.path.join(project_root, "assets")):
-        real_assets_dir = os.path.join(project_root, "assets")
-
-    created_links = []
-    if real_assets_dir:
-        target_paths = [os.path.join(file_dir, "assets"), os.path.join(project_root, "assets")]
-        for t_path in target_paths:
-            if real_assets_dir != t_path and not os.path.exists(t_path):
-                try:
-                    os.symlink(real_assets_dir, t_path, target_is_directory=True)
-                    created_links.append(t_path)
-                except Exception:
-                    try:
-                        shutil.copytree(real_assets_dir, t_path)
-                        created_links.append(t_path)
-                    except Exception:
-                        pass
-
-    # --- НОВЫЙ БЛОК: Препроцессинг файла ---
-    # Читаем файл, вырезаем тяжелую графику, рендерим в PNG, заменяем на <img> в памяти
-    try:
-        modified_content = extract_and_render_blocks(file_path, project_root)
-        # Сохраняем оригинальное содержимое
-        with open(file_path, "r", encoding="utf-8") as f:
-            original_content = f.read()
-        # Временно пишем модифицированный контент в файл, чтобы HTML-компилятор схавал картинки вместо кода
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(modified_content)
-    except Exception as e:
-        print(f"Ошибка препроцессинга блоков: {e}")
-        original_content = None
-
-    cmd = [
-        "typst", "compile",
-        "--root", project_root,
-        "--features", "html",
-        "--format", "html",
-        file_path,
-        output_html_path
-    ]
-    
-    try:
-        subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8", cwd=file_dir)
-        success = True
-    except (subprocess.CalledProcessError, FileNotFoundError) as e:
-        print(f"Ошибка компиляции Typst: {e}")
-        success = False
-    finally:
-        for link in created_links:
-            if os.path.exists(link):
-                if os.path.islink(link): os.unlink(link)
-                else: shutil.rmtree(link)
-                
-    if success and os.path.exists(output_html_path):
-        with open(output_html_path, "r", encoding="utf-8") as f:
-            typst_html = f.read()
-
-        body_content = ""
-        if "<body>" in typst_html and "</body>" in typst_html:
-            body_content = typst_html.split("<body>")[1].split("</body>")[0]
-        else:
-            body_content = typst_html
-
-        file_crumbs = generate_breadcrumbs(file_dir, root_dir, is_file=True, file_name=os.path.basename(file_path))
-        back_to_root = get_relative_depth(file_dir, root_dir)
-
-        ennobled_html = f"""<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>{os.path.basename(file_path)} - Просмотр</title>
-    <link rel="stylesheet" href="{back_to_root}styles.css">
 </head>
 <body>
 <div class="container">
@@ -308,12 +109,31 @@ def compile_typst_to_html(file_path, root_dir, current_logo_url):
         </div>
     </div>
     <div class="wrapped-content-container">
-        {body_content}
+        <!-- Важно: изначально src оставляем пустым, чтобы передать параметры целиком -->
+        <iframe id="pdfPlayer" class="pdf-viewer"></iframe>
     </div>
 </div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {{
+        const iframe = document.getElementById('pdfPlayer');
+        let pdfUrl = "{rel_pdf_url}#toolbar=0&navpanes=0";
+        
+        // Проверяем, передал ли друг хэш в ссылке (например, #task-1)
+        if (window.location.hash) {{
+            const targetLabel = window.location.hash.replace('#', '');
+            // Дописываем официальный параметр Adobe PDF для перехода к метке
+            pdfUrl += "&nameddest=" + encodeURIComponent(targetLabel);
+        }}
+        
+        // Только теперь инициализируем плеер
+        iframe.src = pdfUrl;
+    }});
+</script>
 </body>
 </html>"""
 
+        output_html_path = os.path.splitext(file_path)[0] + ".html"
         with open(output_html_path, "w", encoding="utf-8") as f:
             f.write(ennobled_html)
 

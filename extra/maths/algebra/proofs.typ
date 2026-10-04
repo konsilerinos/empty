@@ -1,11 +1,7 @@
-#set text(lang: "ru")
-#set page()
-
 #set page(
   paper: "a4",
   margin: (x: 1cm, y: 1cm),
-  height: auto,
-  fill: white
+  // height: auto
 )
 
 #show math.equation.where(block: true): set align(left)
